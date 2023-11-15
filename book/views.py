@@ -5,6 +5,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from rest_framework.response import Response
 from rest_framework import status
+from etc.response_errors import ERORR_404
 
 
 class CreateListBooksAPIView(ListCreateAPIView):
@@ -25,7 +26,7 @@ class RetrieveBookAPIView(RetrieveUpdateDestroyAPIView):
         try:
             book = Book.objects.get(id=kwargs['pk'])
         except Author.DoesNotExist:
-            return Response({"message": 'Book not found'}, status=status.HTTP_404_NOT_FOUND)
+            return Response(ERORR_404, status=status.HTTP_404_NOT_FOUND)
         book_serializer = BookSerializer(book)
         reviews = Review.objects.filter(book=book)
         reviews_serializer = ReviewSerializer(reviews, many=True)
@@ -52,7 +53,7 @@ class RetrieveAuthorAPIView(RetrieveUpdateDestroyAPIView):
         try:
             author = Author.objects.get(id=kwargs['pk'])
         except Author.DoesNotExist:
-            return Response({"message": 'Author not found'}, status=status.HTTP_404_NOT_FOUND)
+            return Response(ERORR_404, status=status.HTTP_404_NOT_FOUND)
         author_serializer = AuthorSerializer(author)
         books = Book.objects.filter(author=author)
         book_serializer = BookSerializer(books, many=True)
